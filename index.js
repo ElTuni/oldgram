@@ -28,16 +28,39 @@ const posts = [
     }
 ]
 
-const Elrealname = document.getElementById("realname")
-const Ellocation = document.getElementById("location")
-const Elprofilepic = document.getElementById("profile-pic")
-const Elmainpic = document.getElementById("main-pic")
-const Ellikes = document.getElementById("likes")
-const Elcomment = document.getElementById("comment")
+const Elfeed = document.getElementById("feed")
 
-Elrealname.textContent = posts[0].name
-Ellocation.textContent = posts[0].location
-Elprofilepic.src = posts[0].avatar
-Elmainpic.src = posts[0].post
-Ellikes.textContent = posts[0].likes + " likes"
-Elcomment.innerHTML = `<span class="bold-txt">${posts[0].username}</span> ${posts[0].comment}`
+for (let i = 0; i < posts.length; i++){
+    Elfeed.innerHTML += `
+    <div class="container">
+        <div class= "section-username padding-left">
+            <img class="profile-pic" src=${posts[i].avatar}>
+            <div class="user-info-txt">
+                <h2 class="bold-txt">${posts[i].name}</h2>
+                <h3>${posts[i].location}</h3>
+            </div>
+        </div>
+        <img class="main-pic" src=${posts[i].post}>
+        <div class="section-btn padding-left">
+            <img class="icon heart" src="images/icon-heart.png">
+            <img class="icon" src="images/icon-comment.png">
+            <img class="icon" src="images/icon-dm.png">
+        </div>
+        <div class="comments padding-left">
+            <p class="bold-txt likes">${posts[i].likes} likes</p> 
+            <p><span class="bold-txt">${posts[i].username}</span> ${posts[i].comment}</p>
+        </div>
+    </div>
+    `
+}
+
+document.querySelectorAll(".heart").forEach(button => {
+    button.addEventListener("click", function (){
+        const post = event.target.closest(".container");
+        const likesEl = post.querySelector(".likes");
+        const likes_txt = likesEl.textContent;
+        let likes_num = parseInt(likes_txt);
+        const likes_total = (likes_num + 1) + " likes";
+        post.querySelector(".likes").textContent = likes_total;
+    })});
+

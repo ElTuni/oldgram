@@ -11,6 +11,11 @@ body {
     width: 375px;
     margin: 0 auto;
     box-sizing: border-box;
+    border-bottom: 10px rgba(226, 226, 226, 0.61) solid;
+}
+
+.container:last-of-type{
+    border-bottom: none;
 }
 
 /* HEADER PART */
@@ -95,5 +100,5 @@ header .container{
 }
 
 .comments p {
-    margin: 8px 0px;
+    margin: 3px 0px;
 }
