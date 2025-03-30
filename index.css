@@ -72,11 +72,7 @@ header .container{
     padding-left: 10px;
 }
 
-
-
-
-
-
+/* FEED PART */
 .main-pic {
     width: 100%;
 }
@@ -94,7 +90,6 @@ header .container{
     filter: drop-shadow(0px 0px 4px rgba(114, 114, 114, 0.61));
 }
 
-
 .comments {
     font-size: 13px;
     padding-bottom: 8px;
@@ -102,4 +97,23 @@ header .container{
 
 .comments p {
     margin: 3px 0px;
+}
+
+.sending {
+    color: rgb(24, 143, 255);
+    font-weight: 700;
+    font-family: inherit;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sending:hover {
+    color: rgb(10, 60, 107);
+}
+
+.sendingtxt{
+    border: none;
+    outline: none;
 }

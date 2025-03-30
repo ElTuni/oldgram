@@ -28,10 +28,11 @@ const posts = [
     }
 ]
 const Elfeed = document.getElementById("feed")
+const randomUsername = "anonymous " + (Math.floor(Math.random() * 1000))
 
 for (let i = 0; i < posts.length; i++){
     Elfeed.innerHTML += `
-    <div class="container" data-liked= false>
+    <div class="container" data-liked=false>
         <div class= "section-username padding-left">
             <img class="profile-pic" src=${posts[i].avatar}>
             <div class="user-info-txt">
@@ -42,12 +43,12 @@ for (let i = 0; i < posts.length; i++){
         <img class="main-pic" src=${posts[i].post}>
         <div class="section-btn padding-left">
             <img class="icon heart" src="images/icon-heart.png">
-            <img class="icon" src="images/icon-comment.png">
+            <img class="icon write" src="images/icon-comment.png">
             <img class="icon" src="images/icon-dm.png">
         </div>
-        <div class="comments padding-left">
+        <div class="comments padding-left" data-commenting=false>
             <p class="bold-txt likes">${posts[i].likes} likes</p> 
-            <p><span class="bold-txt">${posts[i].username}</span> ${posts[i].comment}</p>
+            <p class="usernametxt"><span class="bold-txt">${posts[i].username}</span> ${posts[i].comment}</p>
         </div>
     </div>
     `
@@ -56,27 +57,83 @@ for (let i = 0; i < posts.length; i++){
 document.querySelectorAll(".heart").forEach(button => {
     button.addEventListener("click", liking)});
 
-    document.querySelectorAll(".main-pic").forEach(button => {
-        button.addEventListener("dblclick", liking)});
+document.querySelectorAll(".main-pic").forEach(button => {
+    button.addEventListener("dblclick", liking)});
+
+document.querySelectorAll(".write").forEach(button => {
+    button.addEventListener("click", commentCreation)});
+
 
 function liking (event){
     const post = event.target.closest(".container");
-            const likesEl = post.querySelector(".likes");
-            const heartEl = post.querySelector(".heart");
-            let isliked = post.dataset.liked;
-            const likes_txt = likesEl.textContent;
-            let likes_num = parseInt(likes_txt);
-    
-            if (isliked == "false"){
-                const likes_total = (likes_num + 1) + " likes";
-                post.querySelector(".likes").textContent = likes_total;
-                heartEl.src = "images/icon-heart-liked.png";
-                post.dataset.liked = "true"
-    
-            }else if(isliked == "true"){
-                const likes_total = (likes_num - 1) + " likes";
-                post.querySelector(".likes").textContent = likes_total;
-                heartEl.src = "images/icon-heart.png";
-                post.dataset.liked = "false"
-            }
+    const likesEl = post.querySelector(".likes");
+    const heartEl = post.querySelector(".heart");
+    let isliked = post.dataset.liked;
+    const likes_txt = likesEl.textContent;
+    let likes_num = parseInt(likes_txt);
+
+    if (isliked == "false"){
+        const likes_total = (likes_num + 1) + " likes";
+        post.querySelector(".likes").textContent = likes_total;
+        heartEl.src = "images/icon-heart-liked.png";
+        post.dataset.liked = "true"
+
+    } else if (isliked == "true"){
+        const likes_total = (likes_num - 1) + " likes";
+        post.querySelector(".likes").textContent = likes_total;
+        heartEl.src = "images/icon-heart.png";
+        post.dataset.liked = "false"
+    }
 }
+
+function commentCreation (event){
+    const post = event.target.closest(".container")
+    const commentsEl = post.querySelector(".comments");
+    let iscommenting = commentsEl.dataset.commenting
+
+    if (iscommenting == "false"){
+        const newInput = document.createElement("input");
+        const newButton = document.createElement("button");
+        newButton.textContent = "Send"
+        newButton.className = "sending"
+        newInput.className = "sendingtxt"
+        newInput.placeholder = "Add a comment..."
+
+        commentsEl.append(newInput, newButton)
+        commentsEl.dataset.commenting = "true"
+        newInput.focus()
+
+    } else if (iscommenting == "true"){
+        const oldInput = post.querySelector("input")
+        const oldButton = post.querySelector("button")
+        commentsEl.removeChild(oldInput)
+        commentsEl.removeChild(oldButton)
+        commentsEl.dataset.commenting = "false"
+    }
+};
+
+function commentSending (event){
+    const post = event.target.closest(".container")
+    let newCommenttxt = post.querySelector(".sendingtxt").value
+    const commentsEl = post.querySelector(".usernametxt")
+
+    // delete the first spaces
+    newCommenttxt = newCommenttxt.trim()
+    if (newCommenttxt[0] != undefined ){
+        commentsEl.innerHTML += `<p> <span  class="bold-txt">${randomUsername}</span> ${newCommenttxt}</p>`
+        post.querySelector(".sendingtxt").value = ""
+    }
+}
+
+document.addEventListener("click", function(){
+    if (event.target.closest(".sending")) {
+        commentSending(event)
+    }
+});
+
+Elfeed.addEventListener("keyup", function(event){
+    event.preventDefault();
+    if(event.keyCode === 13){
+        commentSending(event)
+    }
+})
