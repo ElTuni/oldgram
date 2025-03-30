@@ -27,12 +27,11 @@ const posts = [
         likes: 152
     }
 ]
-
 const Elfeed = document.getElementById("feed")
 
 for (let i = 0; i < posts.length; i++){
     Elfeed.innerHTML += `
-    <div class="container">
+    <div class="container" data-liked= false>
         <div class= "section-username padding-left">
             <img class="profile-pic" src=${posts[i].avatar}>
             <div class="user-info-txt">
@@ -55,12 +54,29 @@ for (let i = 0; i < posts.length; i++){
 }
 
 document.querySelectorAll(".heart").forEach(button => {
-    button.addEventListener("click", function (){
-        const post = event.target.closest(".container");
-        const likesEl = post.querySelector(".likes");
-        const likes_txt = likesEl.textContent;
-        let likes_num = parseInt(likes_txt);
-        const likes_total = (likes_num + 1) + " likes";
-        post.querySelector(".likes").textContent = likes_total;
-    })});
+    button.addEventListener("click", liking)});
 
+    document.querySelectorAll(".main-pic").forEach(button => {
+        button.addEventListener("dblclick", liking)});
+
+function liking (event){
+    const post = event.target.closest(".container");
+            const likesEl = post.querySelector(".likes");
+            const heartEl = post.querySelector(".heart");
+            let isliked = post.dataset.liked;
+            const likes_txt = likesEl.textContent;
+            let likes_num = parseInt(likes_txt);
+    
+            if (isliked == "false"){
+                const likes_total = (likes_num + 1) + " likes";
+                post.querySelector(".likes").textContent = likes_total;
+                heartEl.src = "images/icon-heart-liked.png";
+                post.dataset.liked = "true"
+    
+            }else if(isliked == "true"){
+                const likes_total = (likes_num - 1) + " likes";
+                post.querySelector(".likes").textContent = likes_total;
+                heartEl.src = "images/icon-heart.png";
+                post.dataset.liked = "false"
+            }
+}
