@@ -53,16 +53,29 @@ for (let i = 0; i < posts.length; i++){
     </div>
     `
 }
+document.addEventListener("click", function(e){
+    if (e.target.className.includes("heart")) {
+        liking(e)
+    } else if (e.target.className.includes("write")) {
+        commentCreation(e)
+    } else if (e.target.className.includes("sending")) {
+        commentSending(e)
+    }
+})
 
-document.querySelectorAll(".heart").forEach(button => {
-    button.addEventListener("click", liking)});
+document.addEventListener("dblclick", function(e){
+    if (e.target.className.includes("main-pic")){
+        liking(e)
+        console.log(e.target)
+    }
+})
 
-document.querySelectorAll(".main-pic").forEach(button => {
-    button.addEventListener("dblclick", liking)});
-
-document.querySelectorAll(".write").forEach(button => {
-    button.addEventListener("click", commentCreation)});
-
+Elfeed.addEventListener("keyup", function(event){
+    event.preventDefault();
+    if(event.keyCode === 13){
+        commentSending(event)
+    }
+})
 
 function liking (event){
     const post = event.target.closest(".container");
@@ -125,15 +138,4 @@ function commentSending (event){
     }
 }
 
-document.addEventListener("click", function(){
-    if (event.target.closest(".sending")) {
-        commentSending(event)
-    }
-});
 
-Elfeed.addEventListener("keyup", function(event){
-    event.preventDefault();
-    if(event.keyCode === 13){
-        commentSending(event)
-    }
-})
